@@ -1,0 +1,51 @@
+HW2 Assessment
+
+1) Warmup
+CONVERT GRAMMAR FORMAT OF HW1 TO GRAMMAR FORMAT OF HW2
+
+Input = (start_sym, [[lhs, rhs]; [lhs;rhs]; [lhs;rhs]; ...])
+Output = (start_sym, fun x -> [rhs, rhs...])
+
+For every rule in the grammar, we have to check if it matches by using 
+recursive function.
+->If it matches, then we add it to the list.
+->Otherwise, we go to the next rule.
+
+2) Main Homework
+
+At first it was really confusing because the Assignment said to create 
+a function parse_prefix that takes only 1 input grammar. However, looking
+at the sample cases makes it cleared that the function should actually
+take 3 inputs: grammar, accept, and fragment.
+
+What the function does is actually pretty clear thanks to the explanations
+and sample cases. However, the implementation requires more understanding.
+
+In my implementation, I used two recursive functions as suggested by the TA.
+
+The first function is called match_conjunction. It takes 6 inputs (rules, 
+rules, accept, derivation, frag). This function check if the current rule
+being check is empty or not. If it is empty, it means that all the rules have
+been checked, and we return the accepter and giving it the input of derivation
+and frag. If it's not empty, we check if the rule head is a Terminal or
+a Non-Terminal. If it is a terminal, we check our current fragment. If there
+is no more fragment, we return None. Otherwise we check if the head of
+the fragment if it matches with the terminal symbol, moving to the next rule
+and fragment if yes, or return None otherwise. If it is non-terminal, we call
+the second function using the non-terminal symbol as the start_symbol.
+
+The second one is called match_disjunction. It takes 6 inputs (start_symbol,
+rules, matching_rules, accept, derivation, frag) with derivation initially
+empty. This function checks the rules. If it does not match with anything, we
+return none. It then checks if the current rule matches with the current head
+of the fragment by calling match_conjunction. If it matches, it proceeds to
+update derivation. Otheerwise, it moves on by moving on the next rule.
+
+The functions end when there is no more fragment or no more rule available to
+reach the wanted result.
+
+The disadvantage of this method is that it is leftmost-derivative, which means
+that it will try the left most rule, always. This may cause the algorithm to
+run forever because of the recursive call. This may be done if there exist a
+rule whose left-most rule call itself. Causing it to repeatedly call itself
+without being able to solve the problem.
